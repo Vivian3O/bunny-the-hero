@@ -1,0 +1,76 @@
+controller.anyButton.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (Bunny_Hero.vy == 0) {
+        Bunny_Hero.vy = -150
+    }
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
+    if (info.life() == 1) {
+        game.gameOver(false)
+        game.setGameOverEffect(false, effects.slash)
+    } else {
+        info.changeLifeBy(-1)
+    }
+})
+let projectile = 0
+let Log_speed = 0
+let Bunny_Hero: Sprite = null
+scene.setBackgroundColor(13)
+info.setLife(5)
+Bunny_Hero = sprites.create(img`
+    . . . . . . 1 3 . 3 1 . . . . . 
+    . . . . . . 1 3 . 3 1 . . . . . 
+    . . . . . . 1 1 1 1 1 . . . . . 
+    . . . . . . 1 1 1 1 1 . . . . . 
+    . . . . . . 1 f 1 f 1 . . . . . 
+    . . . . . . 1 1 1 1 1 . . . . . 
+    . . . . . . 2 1 1 1 2 . . . . . 
+    . . . . . 2 1 2 2 2 1 2 . . . . 
+    . . . . . 2 1 1 1 1 1 2 . . . . 
+    . . . . . 2 1 1 1 1 1 2 . . . . 
+    . . . . . 2 1 1 1 1 1 2 . . . . 
+    . . . . . 2 1 1 1 1 1 2 . . . . 
+    . . . . . 2 2 1 1 1 2 2 . . . . 
+    . . . . . 2 2 1 2 1 2 2 . . . . 
+    . . . . . 2 2 1 2 1 2 2 . . . . 
+    . . . . . 2 2 1 2 1 2 2 . . . . 
+    `, SpriteKind.Player)
+Bunny_Hero.setPosition(10, 80)
+game.onUpdate(function () {
+    if (Bunny_Hero.y < 80) {
+        Bunny_Hero.ay = 300
+    } else {
+        Bunny_Hero.ay = 0
+        Bunny_Hero.vy = 0
+    }
+})
+game.onUpdateInterval(2000, function () {
+    Log_speed = -100 - game.runtime() / 250
+    projectile = 0
+    sprites.createProjectileFromSide(img`
+        ........................
+        ..........bbbb..........
+        ........bbddddbb........
+        .......bddbbbbddb.......
+        ......bdbbddddbbdb......
+        .....bdbbdbbbbdbbdb.....
+        .....bdbdbddddbdbdb.....
+        .....cdbbdbbbbdbbdc.....
+        .....cbdbbddddbbdbc.....
+        .....efbddbbbbddbce.....
+        .....eeffbddddbccee.....
+        .....eeeeffcccceee......
+        .....ceeeeeeeeeeee......
+        .....ceeeeeeeeeeee......
+        .....feeeeeeeeeeee......
+        .....cceeeeeeeeeee......
+        ......feeeeeeeeeee......
+        .....6fceeeeeeeeee6.....
+        ....6776eeeeeeeee676....
+        ...6777666eeee6666776...
+        ..67768e67766777667776..
+        ...668ee7768867788666...
+        ......ee77eeee77ecee....
+        ......ee6eeeeee6eef.....
+        `, Log_speed, 0).y = 80
+    info.changeScoreBy(10)
+})
